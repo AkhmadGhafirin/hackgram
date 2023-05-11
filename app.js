@@ -16,7 +16,11 @@ app.use(
     session({
         secret: 'secret-key',
         resave: false,
-        saveUninitialized: true
+        saveUninitialized: true,
+        // cookie: { 
+        //     secure: false,
+        //     sameSite: true
+        //  }
     })
 )
 

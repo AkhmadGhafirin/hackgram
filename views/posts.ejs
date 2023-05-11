@@ -38,18 +38,17 @@
         <nav class="navbar navbar-expand-lg" style="background-color: #F16634;">
             <div class="container-fluid">
                 <a class="navbar-brand fst-italic fw-bolder" href="/" style="color: white;">Hackgram</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
                 <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
                     <form class="d-flex" role="search" action="/posts" method="get">
                         <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">
                         <button class="btn btn-outline-light" type="submit">Search</button>
                     </form>
                 </div>
-                <a class="btn btn-outline-light" href="/posts/add">Create New Post</a>
+                <% if (user.role === 'Admin') { %>
+                    <a class="btn btn-outline-light" href="/tags/add">Create New Tag</a>
+                <% } %>
+                <a class="btn btn-outline-light mx-2" href="/posts/add">Create New Post</a>
+                <a class="btn btn-outline-light" href="/logout">Logout</a>
             </div>
         </nav>
     </section>
@@ -70,14 +69,14 @@
                                 <img src="<%= el.User.Profile.profilePicture %>" class="rounded-circle" height="50px"
                                     width="50px" alt="avatar" />
                                 <h5 class="card-text">
-                                    <%= `${el.User.Profile.firstName} ${el.User.Profile.lastName}` %>
+                                    <%= el.User.Profile.fullName() %>
                                 </h5>
                                 <p class="card-text">
-                                    <%= moment(el.updatedAt.toLocaleString(), 'MM/DD/YYYY, hh:mm:ss' ).fromNow() %>
+                                    <%= formatPostedDate(el.updatedAt) %>
                                 </p>
-                                <p class="btn btn-outline-secondary">
+                                <a href="/posts?filterByTag=<%= el.Tag.id %>" class="btn btn-outline-secondary">
                                     <%= el.Tag.name %>
-                                </p>
+                                </a>
                             </div>
                         </div>
                         <div class="card-footer text-center" style="background-color: white;">
@@ -95,16 +94,24 @@
                     <% }) %>
             </div>
             <div class="col-md-5" style="margin-bottom: 25px;">
-                <div class="card testimonial-card">
+                <div class="card testimonial-card" onclick="location.href='<%= `/profile/${user.id}/edit` %>';" style="cursor: pointer;">
                     <div class="card-up aqua-gradient"></div>
                     <div class="avatar mx-auto white">
-                        <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2831%29.jpg"
-                            class="rounded-circle img-fluid" alt="woman avatar">
+                        <img src="<%= profile.profilePicture %>"
+                            class="rounded-circle img-fluid" alt="<%= profile.fullName() %>">
                     </div>
                     <div class="card-body text-center">
-                        <h4 class="card-title font-weight-bold">Martha Smith</h4>
-                        <hr>
+                        <h4 class="card-title font-weight-bold"><%= profile.fullName() %> <small class="text-muted">(<%= profile.User.getUsernameAndRole() %>)</small></h4>
+                        <h8 class="card-title font-weight-bold"><%= profile.User.email %> <small class="text-muted"><%= `(${profile.gender}) (${profile.age})` %></small></h8>
                     </div>
+                </div>
+                <div class="card" style="margin-top: 20px;">
+                    <h6 class="card-header text-center">Tags</h6>
+                    <ul class="list-group list-group-flush">
+                        <% tags.forEach(el => { %>
+                            <li class="list-group-item"><a href="/posts?filterByTag=<%= el.id %>" style="text-decoration: none; color: black;"><%= `${el.name} (${el.Posts.length})` %></a></li>                         
+                        <% }) %>
+                    </ul>
                 </div>
             </div>
         </div>

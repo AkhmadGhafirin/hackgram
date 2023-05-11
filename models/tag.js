@@ -14,10 +14,31 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Tag.init({
-    name: DataTypes.STRING
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: {
+        args: true,
+        msg: 'Tag already in exist!'
+      },
+      validate: {
+        notNull: {
+          msg: 'Tag name is required!'
+        },
+        notEmpty: {
+          msg: 'Tag name is required!'
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Tag',
   });
+
+  Tag.beforeCreate((tag) => {
+    tag.createdAt = new Date()
+    tag.updatedAt = new Date()
+  })
+
   return Tag;
 };

@@ -2,7 +2,7 @@
 
 const { User, Profile, Post, Tag } = require('../models')
 const { Op } = require('sequelize')
-const moment = require('moment')
+const formatPostedDate = require('../helpers/formatPostedDate')
 const bcrypt = require('bcryptjs')
 
 class Controller {
@@ -14,22 +14,19 @@ class Controller {
     static login(req, res) {
         const { email, password } = req.body
         User.findOne({
-            where: {
-                email: email
-            }
+            where: { email }
         })
         .then(user => {
-            console.log(user, 'masuk dinsini bos');
             if (user && bcrypt.compareSync(password, user.password)) {
                 req.session.role = user.role
-                req.session.UserId = user.UserId
+                req.session.userId = user.id
                 res.redirect('/posts')
             } else {
-                res.redirect('/?error=login failed! please check your email or password')
+                res.redirect(`/?error=Invalid Email or Password!`)
             }
         })
         .catch(err => {
-            console.log('ini error disininininini');
+            console.log(err, 'ini error disininininini');
             res.send(err)
         })
     }
@@ -49,10 +46,13 @@ class Controller {
     }
 
     static posts(req, res) {
-
-        console.log(req.session.UserId, 'ini session dari post');
-
-        const { search } = req.query
+        const { search, filterByTag } = req.query
+        const user = {
+            role: req.session.role,
+            id: req.session.userId
+        }
+        let tags = null
+        let profile = null
         const options = {
             include: {
                 all: true,
@@ -67,15 +67,27 @@ class Controller {
                 }
             }
         }
-        Post.findAll(options)
-        .then(posts => {
-            const user = {
-                role: req.session.role,
-                id: req.session.UserId
+        if (filterByTag) {
+            options.where = {
+                TagId: filterByTag
             }
-            res.render('posts', { posts, moment, user })
+        }
+        Profile.findOne({ where: { UserId: user.id }, include: User })
+        .then(result => {
+            profile = result
+            return Tag.findAll({ include: Post })
         })
-        .catch(err => res.send(err))
+        .then(result => {
+            tags = result
+            return Post.findAll(options)
+        })
+        .then(posts => {
+            res.render('posts', { posts, formatPostedDate, user, tags, profile })
+        })
+        .catch(err => {
+            console.log(err, 'ini posts error');
+            res.send(err)
+        })
     }
 
     static showPostForm(req, res) {
@@ -97,7 +109,7 @@ class Controller {
     }
 
     static createPost(req, res) {
-        const UserId = 6
+        const UserId = req.session.userId
         const { title, content, TagId, imgUrl } = req.body
         Post.create({ title, content, TagId, imgUrl, UserId })
         .then(post => res.redirect('/posts'))
@@ -111,7 +123,7 @@ class Controller {
             { title, content, TagId, imgUrl },
             { where: { id }}
         )
-        .then(post => {})
+        .then(post => res.redirect('/posts'))
         .catch(err => res.send(err))
     }
 
@@ -132,15 +144,32 @@ class Controller {
         .catch(err => res.send(err))
     }
 
-    static profile(req, res) {
-        Profile.findOne({})
-        .then(profile => {})
+    static showTagForm(req, res) {
+        res.render('tagForm')
+    }
+
+    static addTag(req, res) {
+        const { tag } = req.body
+        Tag.create({ name: tag })
+        .then(tag => res.redirect('/posts'))
+        .catch(err => res.send(err))
+    }
+
+    static showProfileForm(req, res) {
+        const { userId } = req.params
+        Profile.findOne({where: { UserId: userId } })
+        .then(profile => res.render('profileForm', { profile, userId }))
         .catch(err => res.send(err))
     }
 
     static editProfile(req, res) {
-        Profile.update({})
-        .then(profile => {})
+        const { userId } = req.params
+        const { firstName, lastName, gender, age, profilePicture } = req.body
+        Profile.update(
+            { firstName, lastName, gender, age, profilePicture },
+            { where: { UserId: userId } }
+        )
+        .then(profile => res.redirect('/posts'))
         .catch(err => res.send(err))
     }
 

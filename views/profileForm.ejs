@@ -14,7 +14,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6 mx-auto mt-4">
-                    <form action="/profile/:id/edit" method="post">
+                    <form action="/profile/<%= userId %>/edit" method="post">
                         <div class="mb-3">
                             <label for="firstName" class="form-label">First Name</label>
                             <input type="text" class="form-control" name="firstName" placeholder="Enter first name" value="<%= profile.firstName%>">
@@ -27,7 +27,7 @@
                             <label for="gender" class="form-label">Gender</label>
                             <select name="gender" class="form-select">
                                 <% ['Male', 'Female'].forEach(el => { %>
-                                    <option <%= profile.gender === el ? 'selected' %> value="<%= el %>"><%= el %></option>
+                                    <option value="<%= el %>" <%= profile.gender === el ? 'selected' : '' %>><%= el %></option>
                                 <% }) %>
                             </select>
                         </div>

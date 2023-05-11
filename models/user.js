@@ -16,12 +16,59 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Post)
       User.hasOne(models.Profile)
     }
+
+    getUsernameAndRole() {
+      return this.username ? `${this.username} - ${this.role}` : this.role
+    }
   }
   User.init({
     username: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    role: DataTypes.STRING
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: {
+        args: true,
+        msg: 'Email address already in use!'
+      },
+      validate: {
+        notNull: {
+          msg: 'Email is required!'
+        },
+        notEmpty: {
+          msg: 'Email is required!'
+        },
+        isEmail: {
+          msg: 'Email is invalid!'
+        }
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Password is required!'
+        },
+        notEmpty: {
+          msg: 'Password is required!'
+        },
+        minLength(value) {
+          if (value.length < 8) throw ('Password min 8 character')
+        }
+      }
+    },
+    role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Role is required!'
+        },
+        notEmpty: {
+          msg: 'Role is required!'
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'User',
