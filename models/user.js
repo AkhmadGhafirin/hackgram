@@ -23,5 +23,15 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'User',
   });
+
+  User.beforeCreate((user) => {
+    user.createdAt = new Date()
+    user.updatedAt = new Date()
+  })
+
+  User.beforeUpdate((user) => {
+    user.updatedAt = new Date()
+  })
+
   return User;
 };

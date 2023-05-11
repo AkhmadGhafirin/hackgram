@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackgram</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+    <%- include('partials/_nav') %>
+    <section style="padding-top: 20px; padding-bottom: 20px;">
+        <h1 class="text-center">Create New Post</h1>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mx-auto mt-4">
+                    <form action="/posts/add" method="post">
+                        <div class="mb-3">
+                            <label for="title" class="form-label">Title</label>
+                            <input type="text" class="form-control" name="title" placeholder="Enter title" value="<%= post ? post?.title : '' %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="content" class="form-label">Content</label>
+                            <textarea class="form-control" name="content" rows="3" placeholder="Enter content"><%= post ? post?.content : '' %></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="TagId" class="form-label">Tag</label>
+                            <select name="TagId" class="form-select">
+                                <% tags.forEach(el => { %>
+                                    <option <%= !post ? '' : post.TagId === el.id ? 'selected' : '' %> value="<%= el.id %>"><%= el.name %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="imgUrl" class="form-label">Image URL</label>
+                            <input type="text" class="form-control" name="imgUrl" placeholder="Enter image URL" value="<%= post ? post?.imgUrl : '' %>">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="background-color: #F16634;">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

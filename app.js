@@ -15,5 +15,3 @@ app.use(router)
 app.listen(port, () => {
     console.log('listening port', port)
 })
-
-// FK UserId di Profile

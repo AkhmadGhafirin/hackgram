@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackgram</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f5f7fa;
+        }
+
+        .testimonial-card .card-up {
+            height: 120px;
+            overflow: hidden;
+            border-top-left-radius: .25rem;
+            border-top-right-radius: .25rem;
+        }
+
+        .aqua-gradient {
+            background: linear-gradient(40deg, #2096ff, #05ffa3) !important;
+        }
+
+        .testimonial-card .avatar {
+            width: 120px;
+            margin-top: -60px;
+            overflow: hidden;
+            border: 5px solid #fff;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body style="overflow-x: hidden;">
+    <section>
+        <nav class="navbar navbar-expand-lg" style="background-color: #F16634;">
+            <div class="container-fluid">
+                <a class="navbar-brand fst-italic fw-bolder" href="/" style="color: white;">Hackgram</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+                    <form class="d-flex" role="search" action="/posts" method="get">
+                        <input class="form-control me-2" name="search" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-light" type="submit">Search</button>
+                    </form>
+                </div>
+                <a class="btn btn-outline-light" href="/posts/add">Create New Post</a>
+            </div>
+        </nav>
+    </section>
+    <section style="padding-left: 20px; padding-right: 20px; padding-top: 25px;">
+        <div class="row">
+            <div class="col-md-7">
+                <% posts.forEach(el=> { %>
+                    <div class="card" style="margin-bottom: 25px;">
+                        <img src="<%= el.imgUrl %>" class="card-img-top" alt="<%= el.title %>" />
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <%= el.title %>
+                            </h6>
+                            <p class="card-text">
+                                <%= el.content %>
+                            </p>
+                            <div class="col">
+                                <img src="<%= el.User.Profile.profilePicture %>" class="rounded-circle" height="50px"
+                                    width="50px" alt="avatar" />
+                                <h5 class="card-text">
+                                    <%= `${el.User.Profile.firstName} ${el.User.Profile.lastName}` %>
+                                </h5>
+                                <p class="card-text">
+                                    <%= moment(el.updatedAt.toLocaleString(), 'MM/DD/YYYY, hh:mm:ss' ).fromNow() %>
+                                </p>
+                                <p class="btn btn-outline-secondary">
+                                    <%= el.Tag.name %>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="card-footer text-center" style="background-color: white;">
+                            <a href="/posts/<%= el.id %>/edit" class="btn btn-outline-warning">Edit</a>
+                            <a href="/posts/<%= el.id %>/like" class="btn btn-outline-info mx-2">Like (<%= el.like %>)</a>
+                            <a href="/posts/<%= el.id %>/delete" class="btn btn-outline-danger">Delete</a>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+            <div class="col-md-5" style="margin-bottom: 25px;">
+                <div class="card testimonial-card">
+                    <div class="card-up aqua-gradient"></div>
+                    <div class="avatar mx-auto white">
+                        <img src="https://mdbootstrap.com/img/Photos/Avatars/img%20%2831%29.jpg"
+                            class="rounded-circle img-fluid" alt="woman avatar">
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="card-title font-weight-bold">Martha Smith</h4>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="js/bootstrap.min.js"></script>
+</body>
+
+</html>

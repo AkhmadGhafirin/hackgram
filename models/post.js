@@ -25,5 +25,16 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Post',
   });
+
+  Post.beforeCreate((post) => {
+    post.like = 0
+    post.createdAt = new Date()
+    post.updatedAt = new Date()
+  })
+
+  Post.beforeUpdate((post) => {
+    post.updatedAt = new Date()
+  })
+
   return Post;
 };

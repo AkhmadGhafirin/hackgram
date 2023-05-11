@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hackgram</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+    <%- include('partials/_nav') %>
+    <section style="padding-top: 20px; padding-bottom: 20px;">
+        <h1 class="text-center">Edit Profile</h1>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mx-auto mt-4">
+                    <form action="/profile/:id/edit" method="post">
+                        <div class="mb-3">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" name="firstName" placeholder="Enter first name" value="<%= profile.firstName%>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" name="lastName" placeholder="Enter last name" value="<%= profile.lastName %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="gender" class="form-label">Gender</label>
+                            <select name="gender" class="form-select">
+                                <% ['Male', 'Female'].forEach(el => { %>
+                                    <option <%= profile.gender === el ? 'selected' %> value="<%= el %>"><%= el %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" class="form-control" name="age" placeholder="Enter age" value="<%= profile.age %>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="profilePicture" class="form-label">Profile Picture</label>
+                            <input type="text" class="form-control" name="profilePicture" placeholder="Enter profile picture" value="<%= profile.profilePicture %>">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="background-color: #F16634;">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="/js/bootstrap.min.js"></script>
+</body>
+</html>

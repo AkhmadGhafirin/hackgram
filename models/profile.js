@@ -24,5 +24,15 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Profile',
   });
+
+  Profile.beforeCreate((profile) => {
+    profile.createdAt = new Date()
+    profile.updatedAt = new Date()
+  })
+
+  Profile.beforeUpdate((profile) => {
+    profile.updatedAt = new Date()
+  })
+
   return Profile;
 };
