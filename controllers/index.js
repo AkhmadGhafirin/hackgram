@@ -3,16 +3,35 @@
 const { User, Profile, Post, Tag } = require('../models')
 const { Op } = require('sequelize')
 const moment = require('moment')
+const bcrypt = require('bcryptjs')
 
 class Controller {
     static showLanding(req, res) {
-        res.render('login')
+        const { error } = req.query
+        res.render('login', { error })
     }
     
     static login(req, res) {
-        // User.create({})
-        // .then(result => {})
-        // .catch(err => res.send(err))
+        const { email, password } = req.body
+        User.findOne({
+            where: {
+                email: email
+            }
+        })
+        .then(user => {
+            console.log(user, 'masuk dinsini bos');
+            if (user && bcrypt.compareSync(password, user.password)) {
+                req.session.role = user.role
+                req.session.UserId = user.UserId
+                res.redirect('/posts')
+            } else {
+                res.redirect('/?error=login failed! please check your email or password')
+            }
+        })
+        .catch(err => {
+            console.log('ini error disininininini');
+            res.send(err)
+        })
     }
 
     static showSignUp(req, res) {
@@ -30,6 +49,9 @@ class Controller {
     }
 
     static posts(req, res) {
+
+        console.log(req.session.UserId, 'ini session dari post');
+
         const { search } = req.query
         const options = {
             include: {
@@ -47,7 +69,11 @@ class Controller {
         }
         Post.findAll(options)
         .then(posts => {
-            res.render('posts', { posts, moment })
+            const user = {
+                role: req.session.role,
+                id: req.session.UserId
+            }
+            res.render('posts', { posts, moment, user })
         })
         .catch(err => res.send(err))
     }
@@ -119,7 +145,8 @@ class Controller {
     }
 
     static logout(req, res) {
-
+        req.session.destroy()
+        res.redirect('/')
     }
 }
 

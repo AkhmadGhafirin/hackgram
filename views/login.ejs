@@ -55,15 +55,18 @@
                                 <div class="text-center">
                                     <h4 class="mt-1 mb-5 pb-1 fst-italic fw-bolder">Hackgram</h4>
                                 </div>
+                                <% if (error) { %>
+                                    <p style="color: red;" class="text-center"><%= error %></p>
+                                <% } %>
                                 <form action="/" method="post">
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="email">Email</label>
-                                        <input type="email" id="email" class="form-control" />
+                                        <input type="email" name="email" class="form-control" />
                                     </div>
 
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="password">Password</label>
-                                        <input type="password" id="password" class="form-control" />
+                                        <input type="password" name="password" class="form-control" />
                                     </div>
 
                                     <div class="text-center pt-1 mb-5 pb-1">

@@ -10,6 +10,8 @@ router.post('/', Controller.login)
 router.get('/signUp', Controller.showSignUp)
 router.post('/signUp', Controller.signUp)
 
+router.get('/logout', Controller.logout)
+
 router.get('/posts', Controller.posts)
 router.get('/posts/add', Controller.showPostForm)
 router.post('/posts/add', Controller.createPost)
@@ -20,7 +22,5 @@ router.get('/posts/:id/delete', Controller.deletePost)
 
 router.get('/profile:id', Controller.profile)
 router.get('/profile:id/edit', Controller.editProfile)
-
-router.get('/:id/logout', Controller.logout)
 
 module.exports = router

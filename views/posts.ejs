@@ -81,9 +81,15 @@
                             </div>
                         </div>
                         <div class="card-footer text-center" style="background-color: white;">
-                            <a href="/posts/<%= el.id %>/edit" class="btn btn-outline-warning">Edit</a>
+                            <% if (user.id === el.UserId) { %>
+                                <a href="/posts/<%= el.id %>/edit" class="btn btn-outline-warning">Edit</a>                             
+                            <% } %>
                             <a href="/posts/<%= el.id %>/like" class="btn btn-outline-info mx-2">Like (<%= el.like %>)</a>
-                            <a href="/posts/<%= el.id %>/delete" class="btn btn-outline-danger">Delete</a>
+                            <% if (user.role === 'Admin') { %>
+                                <a href="/posts/<%= el.id %>/delete" class="btn btn-outline-danger">Delete</a> 
+                            <% } else if (user.id === el.UserId) { %>
+                                <a href="/posts/<%= el.id %>/delete" class="btn btn-outline-danger">Delete</a>
+                            <% } %>                             
                         </div>
                     </div>
                     <% }) %>
