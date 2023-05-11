@@ -4,6 +4,7 @@ const { User, Profile, Post, Tag } = require('../models')
 const { Op } = require('sequelize')
 const formatPostedDate = require('../helpers/formatPostedDate')
 const bcrypt = require('bcryptjs')
+const sendMail = require('../helpers/sendMail')
 
 class Controller {
     static showLanding(req, res) {
@@ -14,12 +15,19 @@ class Controller {
     static login(req, res) {
         const { email, password } = req.body
         User.findOne({
-            where: { email }
+            where: { email },
+            include: Profile
         })
         .then(user => {
             if (user && bcrypt.compareSync(password, user.password)) {
                 req.session.role = user.role
                 req.session.userId = user.id
+                sendMail({
+                    receiverEmail: email,
+                    receiverName: user.Profile.fullName(),
+                    subject: 'New login to your account',
+                    intro: `We noticed a login to your Hackgram account: ${email}`
+                })
                 res.redirect('/posts')
             } else {
                 res.redirect(`/?error=Invalid Email or Password!`)
@@ -41,7 +49,15 @@ class Controller {
         .then(user => {
             return Profile.create({ firstName, lastName, gender, age, profilePicture, UserId: user.id })
         })
-        .then(result => res.redirect('/'))
+        .then(profile => {
+            sendMail({
+                receiverEmail: email,
+                receiverName: profile.fullName(),
+                subject: 'Welcome to Hackgram',
+                intro: 'Welcome to Hackgram! We\'re very excited to have you on board.'
+            })
+            res.redirect('/')
+        })
         .catch(err => res.send(err))
     }
 
@@ -92,10 +108,12 @@ class Controller {
 
     static showPostForm(req, res) {
         const { id } = req.params
+        const { errors } = req.query
+        const parsedError = errors ? JSON.parse(errors) : null
         let tags = null
         if (!id) {
             Tag.findAll({})
-            .then(result => res.render('postForm', { tags: result, post: null }))
+            .then(result => res.render('postForm', { tags: result, post: null, errors: parsedError }))
             .catch(err => res.send(err))   
         } else {
             Tag.findAll({})
@@ -103,7 +121,7 @@ class Controller {
                 tags = result
                 return Post.findOne({ where: { id } })
             })
-            .then(post => res.render('postForm', { tags, post }))
+            .then(post => res.render('postForm', { tags, post, errors: parsedError }))
             .catch(err => res.send(err))
         }
     }
@@ -113,7 +131,16 @@ class Controller {
         const { title, content, TagId, imgUrl } = req.body
         Post.create({ title, content, TagId, imgUrl, UserId })
         .then(post => res.redirect('/posts'))
-        .catch(err => res.send(err))
+        .catch(err => {
+            if (err?.name === 'SequelizeValidationError') {
+                const errors = {}
+                err.errors.forEach(el => {
+                    const key = el.message.split(' ')[0]
+                    errors[key] = el.message
+                })
+                res.redirect(`/posts/add?errors=${JSON.stringify(errors)}`)
+            } else res.send(err)
+        })
     }
 
     static editPost(req, res) {
@@ -124,7 +151,16 @@ class Controller {
             { where: { id }}
         )
         .then(post => res.redirect('/posts'))
-        .catch(err => res.send(err))
+        .catch(err => {
+            if (err?.name === 'SequelizeValidationError') {
+                const errors = {}
+                err.errors.forEach(el => {
+                    const key = el.message.split(' ')[0]
+                    errors[key] = el.message
+                })
+                res.redirect(`/posts/add?errors=${JSON.stringify(errors)}`)
+            } else res.send(err)
+        })
     }
 
     static likePost(req, res) {

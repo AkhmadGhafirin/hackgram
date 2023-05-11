@@ -67,6 +67,7 @@
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="gender">Gender</label>
                                         <select class="form-select" name="gender">
+                                            <option value="">Choose gender...</option>
                                             <% ['Male', 'Female'].forEach(el => { %>
                                                 <option value="<%= el %>"><%= el %></option>
                                             <% }) %>
@@ -91,6 +92,7 @@
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="role">Role</label>
                                         <select class="form-select" name="role">
+                                            <option value="">Choose role...</option>
                                             <% ['User', 'Admin'].forEach(el => { %>
                                                 <option value="<%= el %>"><%= el %></option>
                                             <% }) %>

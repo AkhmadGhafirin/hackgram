@@ -18,18 +18,28 @@
                         <div class="mb-3">
                             <label for="title" class="form-label">Title</label>
                             <input type="text" class="form-control" name="title" placeholder="Enter title" value="<%= post ? post?.title : '' %>">
+                            <% if (errors && errors.Title) { %>
+                                <label for="title" class="form-label" style="color: red;"><%= errors.Title %></label>                             
+                            <% } %>
                         </div>
                         <div class="mb-3">
                             <label for="content" class="form-label">Content</label>
                             <textarea class="form-control" name="content" rows="3" placeholder="Enter content"><%= post ? post?.content : '' %></textarea>
+                            <% if (errors && errors.Content) { %>
+                                <label for="content" class="form-label" style="color: red;"><%= errors.Content %></label>                             
+                            <% } %>
                         </div>
                         <div class="mb-3">
                             <label for="TagId" class="form-label">Tag</label>
                             <select name="TagId" class="form-select">
+                                <option value="">Choose Tag...</option>
                                 <% tags.forEach(el => { %>
                                     <option <%= !post ? '' : post.TagId === el.id ? 'selected' : '' %> value="<%= el.id %>"><%= el.name %></option>
                                 <% }) %>
                             </select>
+                            <% if (errors && errors.Tag) { %>
+                                <label for="TagId" class="form-label" style="color: red;"><%= errors.Tag %></label>                             
+                            <% } %>
                         </div>
                         <div class="mb-3">
                             <label for="imgUrl" class="form-label">Image URL</label>
