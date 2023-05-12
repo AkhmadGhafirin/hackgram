@@ -40,7 +40,9 @@ class Controller {
     }
 
     static showSignUp(req, res) {
-        res.render('signUp')
+        const { errors } = req.query
+        const parsedError = errors ? JSON.parse(errors) : null
+        res.render('signUp', { errors: parsedError })
     }
 
     static signUp(req, res) {
@@ -58,7 +60,16 @@ class Controller {
             })
             res.redirect('/')
         })
-        .catch(err => res.send(err))
+        .catch(err => {
+            if (err?.name === 'SequelizeValidationError') {
+                const errors = {}
+                err.errors.forEach(el => {
+                    const key = el.message.split(' ')[0]
+                    errors[key] = el.message
+                })
+                res.redirect(`/signUp?errors=${JSON.stringify(errors)}`)
+            } else res.send(err)
+        })
     }
 
     static posts(req, res) {
@@ -181,20 +192,33 @@ class Controller {
     }
 
     static showTagForm(req, res) {
-        res.render('tagForm')
+        const { errors } = req.query
+        const parsedError = errors ? JSON.parse(errors) : null
+        res.render('tagForm', { errors: parsedError })
     }
 
     static addTag(req, res) {
         const { tag } = req.body
         Tag.create({ name: tag })
         .then(tag => res.redirect('/posts'))
-        .catch(err => res.send(err))
+        .catch(err => {
+            if (err?.name === 'SequelizeValidationError') {
+                const errors = {}
+                err.errors.forEach(el => {
+                    const key = el.message.split(' ')[0]
+                    errors[key] = el.message
+                })
+                res.redirect(`/tags/add?errors=${JSON.stringify(errors)}`)
+            } else res.send(err)
+        })
     }
 
     static showProfileForm(req, res) {
         const { userId } = req.params
+        const { errors } = req.query
+        const parsedError = errors ? JSON.parse(errors) : null
         Profile.findOne({where: { UserId: userId } })
-        .then(profile => res.render('profileForm', { profile, userId }))
+        .then(profile => res.render('profileForm', { profile, userId, errors: parsedError }))
         .catch(err => res.send(err))
     }
 
@@ -206,7 +230,16 @@ class Controller {
             { where: { UserId: userId } }
         )
         .then(profile => res.redirect('/posts'))
-        .catch(err => res.send(err))
+        .catch(err => {
+            if (err?.name === 'SequelizeValidationError') {
+                const errors = {}
+                err.errors.forEach(el => {
+                    const key = el.message.split(' ')[0]
+                    errors[key] = el.message
+                })
+                res.redirect(`/profile/${userId}/edit?errors=${JSON.stringify(errors)}`)
+            } else res.send(err)
+        })
     }
 
     static logout(req, res) {

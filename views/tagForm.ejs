@@ -18,6 +18,9 @@
                         <div class="mb-3">
                             <label for="tag" class="form-label">Tag</label>
                             <input type="text" class="form-control" name="tag" placeholder="Enter tag">
+                            <% if (errors && errors.Tag) { %>
+                                <label for="tag" class="form-label" style="color: red;"><%= errors.Tag %></label>                             
+                            <% } %>
                         </div>
                         <button type="submit" class="btn btn-primary" style="background-color: #F16634;">Submit</button>
                     </form>

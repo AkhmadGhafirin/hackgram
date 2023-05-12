@@ -58,11 +58,17 @@
                                 <form action="/signUp" method="post">
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="firstName">First Name</label>
-                                        <input type="text" name="firstName" class="form-control" />
+                                        <input type="text" name="firstName" class="form-control" placeholder="Enter First Name"/>
+                                        <% if (errors && errors.FirstName) { %>
+                                            <label for="firstName" class="form-label" style="color: red;"><%= errors.FirstName %></label>                             
+                                        <% } %>
                                     </div>
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="lastName">Last Name</label>
-                                        <input type="text" name="lastName" class="form-control" />
+                                        <input type="text" name="lastName" class="form-control" placeholder="Enter Last Name"/>
+                                        <% if (errors && errors.LastName) { %>
+                                            <label for="lastName" class="form-label" style="color: red;"><%= errors.LastName %></label>                             
+                                        <% } %>
                                     </div>
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="gender">Gender</label>
@@ -72,22 +78,37 @@
                                                 <option value="<%= el %>"><%= el %></option>
                                             <% }) %>
                                         </select>
+                                        <% if (errors && errors.Gender) { %>
+                                            <label for="gender" class="form-label" style="color: red;"><%= errors.gender %></label>                             
+                                        <% } %>
                                     </div>
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="age">Age</label>
-                                        <input type="number" name="age" class="form-control" />
+                                        <input type="number" name="age" class="form-control" placeholder="Enter Age"/>
+                                        <% if (errors && errors.Age) { %>
+                                            <label for="age" class="form-label" style="color: red;"><%= errors.Age %></label>                             
+                                        <% } %>
                                     </div>
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="profilePicture">Profile Picture</label>
-                                        <input type="text" name="profilePicture" class="form-control" />
+                                        <input type="text" name="profilePicture" class="form-control" placeholder="Enter Profile Picture"/>
+                                        <% if (errors && errors.ProfilePicture) { %>
+                                            <label for="profilePicture" class="form-label" style="color: red;"><%= errors.ProfilePicture %></label>                             
+                                        <% } %>
                                     </div>
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="username">Username</label>
-                                        <input type="text" name="username" class="form-control" />
+                                        <input type="text" name="username" class="form-control" placeholder="Enter Username"/>
+                                        <% if (errors && errors.Username) { %>
+                                            <label for="username" class="form-label" style="color: red;"><%= errors.Username %></label>                             
+                                        <% } %>
                                     </div>
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="email">Email</label>
-                                        <input type="email" name="email" class="form-control" />
+                                        <input type="email" name="email" class="form-control" placeholder="Enter Email"/>
+                                        <% if (errors && errors.Email) { %>
+                                            <label for="email" class="form-label" style="color: red;"><%= errors.Email %></label>                             
+                                        <% } %>
                                     </div>
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="role">Role</label>
@@ -97,10 +118,16 @@
                                                 <option value="<%= el %>"><%= el %></option>
                                             <% }) %>
                                         </select>
+                                        <% if (errors && errors.Role) { %>
+                                            <label for="role" class="form-label" style="color: red;"><%= errors.Role %></label>                             
+                                        <% } %>
                                     </div>
                                     <div class="form-outline mb-4">
                                         <label class="form-label" for="password">Password</label>
-                                        <input type="password" name="password" class="form-control" />
+                                        <input type="password" name="password" class="form-control" placeholder="Enter Password"/>
+                                        <% if (errors && errors.Password) { %>
+                                            <label for="password" class="form-label" style="color: red;"><%= errors.Password %></label>                             
+                                        <% } %>
                                     </div>
                                     <div class="text-center pt-1 mb-5 pb-1">
                                         <button class="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
@@ -116,11 +143,7 @@
                         <div class="col-lg-6 d-flex align-items-center gradient-custom-2">
                             <div class="text-white px-3 py-4 p-md-5 mx-md-4">
                                 <h4 class="mb-4">We are more than just a social media</h4>
-                                <p class="small mb-0">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed
-                                    do eiusmod
-                                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-                                    quis nostrud
-                                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                                <p class="small mb-0">we connect the developers.</p>
                             </div>
                         </div>
                     </div>

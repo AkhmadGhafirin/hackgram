@@ -23,10 +23,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       validate: {
         notNull: {
-          msg: 'Tag name is required!'
+          msg: 'Tag is required!'
         },
         notEmpty: {
-          msg: 'Tag name is required!'
+          msg: 'Tag is required!'
         }
       }
     }
